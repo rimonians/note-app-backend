@@ -26,11 +26,14 @@ userController.updateProfile = async (req, res, next) => {
   try {
     const { bio, dateOfBirth, gender, address, mobile } = req.body;
 
-    await User.updateOne(
+    const result = await User.findOneAndUpdate(
       { _id: req.payload._id },
-      { $set: { bio, dateOfBirth, gender, address, mobile } }
+      { $set: { bio, dateOfBirth, gender, address, mobile } },
+      { new: true, projection: "-budgets" }
     );
-    res.status(201).json({ message: "User profile successfully updated" });
+    res
+      .status(201)
+      .json({ message: "User profile successfully updated", result });
   } catch (err) {
     next(err);
   }
@@ -43,7 +46,8 @@ userController.updateProfileImage = async (req, res, next) => {
     if (file) {
       const user = await User.findOneAndUpdate(
         { _id: req.payload._id },
-        { $set: { profileImage: file.filename } }
+        { $set: { profileImage: file.filename } },
+        { projection: "-budgets" }
       );
       // Unlink previous image if exists
       const prevImage = user.profileImage;
@@ -55,10 +59,10 @@ userController.updateProfileImage = async (req, res, next) => {
           if (err) console.log("Something went wrong");
         });
       }
-
+      const result = { ...user._doc, profileImage: file.filename };
       res
         .status(201)
-        .json({ message: "User profile image successfully updated" });
+        .json({ message: "User profile image successfully updated", result });
     } else {
       res.status(500).json({ message: "Please select an image first" });
     }

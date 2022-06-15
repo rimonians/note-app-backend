@@ -15,8 +15,14 @@ userController.signup = async (req, res, next) => {
     const hashedPassword = await bcrypt.hash(data.password, 5);
     const finalData = { ...data, password: hashedPassword };
     const newUser = new User(finalData);
-    await newUser.save();
-    res.status(201).json({ message: "Signup successfull" });
+    const user = await newUser.save();
+    const payload = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    };
+    const token = jwt.sign(payload, process.env.JWT_SECRET);
+    res.status(201).json({ message: "Signup successfull", token });
   } catch (err) {
     next(err);
   }

@@ -14,12 +14,17 @@ budgetController.createBudget = async (req, res, next) => {
     const finalData = { ...data, user: req.payload._id };
     const newBudget = new Budget(finalData);
     const budget = await newBudget.save();
+    const result = await budget.populate("user", "_id username email");
 
     await User.updateOne(
       { _id: req.payload._id },
       { $push: { budgets: budget._id } }
     );
-    res.status(201).json({ message: "Budget successfully created" });
+
+    res.status(201).json({
+      message: "Budget successfully created",
+      result,
+    });
   } catch (err) {
     next(err);
   }
@@ -55,11 +60,12 @@ budgetController.getBudget = async (req, res, next) => {
 budgetController.updateBudget = async (req, res, next) => {
   try {
     const data = req.body;
-    await Budget.updateOne(
+    const result = await Budget.findOneAndUpdate(
       { _id: req.params.id, user: req.payload._id },
-      { $set: data }
-    );
-    res.status(201).json({ message: "Budget successfully updated" });
+      { $set: data },
+      { new: true }
+    ).populate("user", "_id username email");
+    res.status(201).json({ message: "Budget successfully updated", result });
   } catch (err) {
     next(err);
   }
@@ -71,14 +77,16 @@ budgetController.deleteBudget = async (req, res, next) => {
     const budget = await Budget.findOneAndDelete({
       _id: req.params.id,
       user: req.payload._id,
-    });
+    }).populate("user", "_id username email");
 
     if (budget) {
       await User.updateOne(
         { _id: req.payload._id },
         { $pull: { budgets: budget._id } }
       );
-      res.status(201).json({ message: "Budget successfully deleted" });
+      res
+        .status(201)
+        .json({ message: "Budget successfully deleted", result: budget });
     } else {
       res.status(404).json({ message: "No budget found for delete" });
     }
