@@ -1,8 +1,8 @@
 // Import external module
 const mongoose = require("mongoose");
 
-// Import budget model
-const Budget = require("../models/budgetModel");
+// Import note model
+const Note = require("../models/noteModel");
 
 // User schema
 const userSchema = new mongoose.Schema(
@@ -51,10 +51,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    budgets: [
+    notes: [
       {
         type: mongoose.Types.ObjectId,
-        ref: "Budget",
+        ref: "Note",
       },
     ],
   },

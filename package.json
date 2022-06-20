@@ -1,13 +1,13 @@
 {
-  "name": "budget-app-backend",
+  "name": "note-app-backend",
   "version": "1.0.0",
-  "description": "Budget App Backend",
+  "description": "Note App Backend",
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js"
   },
   "keywords": [
-    "Budget App"
+    "Note App"
   ],
   "author": "Rimon Ahmed",
   "license": "ISC",

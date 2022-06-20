@@ -13,8 +13,8 @@ userController.getProfile = async (req, res, next) => {
   try {
     const result = await User.findOne(
       { _id: req.payload._id },
-      "-budgets"
-    ).populate("budgets", "_id title type amount createdAt updatedAt");
+      "-notes"
+    ).populate("notes", "_id title description createdAt updatedAt");
     res.status(200).json({ result });
   } catch (err) {
     next(err);
@@ -29,7 +29,7 @@ userController.updateProfile = async (req, res, next) => {
     const result = await User.findOneAndUpdate(
       { _id: req.payload._id },
       { $set: { bio, dateOfBirth, gender, address, mobile } },
-      { new: true, projection: "-budgets" }
+      { new: true, projection: "-notes" }
     );
     res
       .status(201)
@@ -47,7 +47,7 @@ userController.updateProfileImage = async (req, res, next) => {
       const user = await User.findOneAndUpdate(
         { _id: req.payload._id },
         { $set: { profileImage: file.filename } },
-        { projection: "-budgets" }
+        { projection: "-notes" }
       );
       // Unlink previous image if exists
       const prevImage = user.profileImage;
@@ -71,5 +71,5 @@ userController.updateProfileImage = async (req, res, next) => {
   }
 };
 
-// Export budget controller
+// Export user controller
 module.exports = userController;

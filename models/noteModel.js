@@ -4,22 +4,18 @@ const mongoose = require("mongoose");
 // Import user model
 const User = require("../models/userModel");
 
-// Budget schema
-const budgetSchema = new mongoose.Schema(
+// Note schema
+const noteSchema = new mongoose.Schema(
   {
     title: {
       type: String,
       required: true,
       trim: true,
     },
-    type: {
+    description: {
       type: String,
       required: true,
       trim: true,
-    },
-    amount: {
-      type: Number,
-      required: true,
     },
     user: {
       type: mongoose.Types.ObjectId,
@@ -29,8 +25,8 @@ const budgetSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Budget model
-const Budget = mongoose.model("Budget", budgetSchema);
+// Note model
+const Note = mongoose.model("Note", noteSchema);
 
-// Export budget model
-module.exports = Budget;
+// Export note model
+module.exports = Note;

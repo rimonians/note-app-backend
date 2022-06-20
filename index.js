@@ -9,7 +9,7 @@ const dbConnection = require("./config/dbConnection");
 // Import routes
 const authRoute = require("./routes/authRoute");
 const userRoute = require("./routes/userRoute");
-const budgetRoute = require("./routes/budgetRoute");
+const noteRoute = require("./routes/noteRoute");
 
 // Import not found & error handling middleware
 const notFound = require("./middlewares/notFound");
@@ -37,7 +37,7 @@ app.use(express.urlencoded({ extended: true }));
 // Use routes
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
-app.use("/budget", budgetRoute);
+app.use("/note", noteRoute);
 
 // Use not found & error handling middleware
 app.use(notFound);
